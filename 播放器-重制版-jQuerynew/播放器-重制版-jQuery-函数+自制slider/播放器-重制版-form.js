@@ -1,4 +1,9 @@
     var log = function() {console.log.apply(console, arguments)}
+    // //建立对象
+    // var playerObject = function(position, songList) {
+    //     this.position = $(position),
+    //     this.songList = songList
+    // }
     //插入控件模板字符串
     var insertContainer = function(position, songList) {
         var numOfsongs = songList.length
@@ -47,7 +52,8 @@
             </div>
             <div class="player-volume-slider player-slider">
                 <button id=id-volume-mute><i class="fa fa-volume-down" aria-hidden="true"></i></button>
-                <input type="range" id=id-volume-slider class=class-slider value=1 min=0 max=1 step=0.001>
+                <div id=id-volume-slider class=class-slider></div>
+                <time></time>
             </div>
             <div class="player-play-mode">
                 <button data-action=loop id=id-player-mode><i class="fa fa-recycle" aria-hidden="true"></i></button>
@@ -58,10 +64,12 @@
             </div>
         </control>`
         $(position).append(t)
-        window.slider = new sliderDiv('95%', 5, 15, 100, 0, '#id-time-slider')
-        slider.createSlider()
+        window.timeSlider = new sliderDiv(1, '95%', 2, 15, 100, 0, '#id-time-slider')
+        timeSlider.createSlider()
+        window.volumeSlider = new sliderDiv(2, '95%', 2, 15, 1, 1, '#id-volume-slider')
+        volumeSlider.createSlider()
+        // log(timeSlider,volumeSlider)
     }
-
 
     //给按钮绑定事件，用事件委托
     var bindPlayEvents = function() {
@@ -229,8 +237,8 @@
         //     player.currentTime = self.value / 100 * player.duration
         // })
         //使用自定义slider的方法，使用slider内部封装的回调函数
-        slider.callbackSlider = function() {
-            player.currentTime = slider.Currentvalue / slider.maxValue * player.duration
+        timeSlider.callbackSlider = function() {
+            player.currentTime = timeSlider.Currentvalue / timeSlider.maxValue * player.duration
         }
         // log(slider.Currentvalue,slider.maxValue,player.duration)
         // player.currentTime = slider.Currentvalue / slider.maxValue * player.duration
@@ -239,29 +247,46 @@
     //声音slider和静音事件事件
     var bindVolumeSlider = function() {
         var player = $('#id-audio-music')[0]
-        var volumeSlider = $('#id-volume-slider')
+        // var volumeSlider = $('#id-volume-slider')      这里名字又重复了
         var mute = $('#id-volume-mute')
         var currentVolume = 0
         // player.volume = Number(volumeSlider.val())
-        //绑定声音slider事件
-        volumeSlider.on('input', function(){
-            var value = Number(volumeSlider.val())
-            if (player.muted === true) {
-                player.muted = false
-            }
-            player.volume = value
-        })
+        // //这是以前的做法，绑定声音slider事件
+        // volumeSlider.on('input', function(){
+        //     var value = Number(volumeSlider.val())
+        //     if (player.muted === true) {
+        //         player.muted = false
+        //     }
+        //     player.volume = value
+        // })
+        //这是新的做法，用自定义slider里面的移动滑块时的回调函数来实现
+        volumeSlider.callbackSlider = function() {
+                var value = volumeSlider.Currentvalue
+                if (player.muted === true) {
+                    player.muted = false
+                }
+                player.volume = value
+        }
         //绑定静音事件
         mute.closest('button').on('click', function(){
             if (player.muted === false) {
                 mute.html('<i class="fa fa-volume-off" aria-hidden="true"></i>')
                 player.muted = true
-                currentVolume = Number(volumeSlider.val())
-                volumeSlider.val(0)
+                //这是老的做法
+                // currentVolume = Number(volumeSlider.val())
+                // volumeSlider.val(0)
+                //这是新的做法
+                currentVolume = volumeSlider.Currentvalue
+                volumeSlider.Currentvalue = 0
+                volumeSlider.sliderByValue()
             } else {
                 mute.html('<i class="fa fa-volume-down" aria-hidden="true"></i>')
                 player.muted = false
-                volumeSlider.val(currentVolume)
+                //这是老的做法
+                // volumeSlider.val(currentVolume)
+                //这是新的做法
+                volumeSlider.Currentvalue = currentVolume
+                volumeSlider.sliderByValue()
             }
         })
     }
@@ -291,10 +316,10 @@
             // var sliderValue = player.currentTime / player.duration * 100
             // slider.value = sliderValue
             //这是现在的方法，使用自定义slider
-            var sliderValue = player.currentTime / player.duration * slider.maxValue
-            slider.Currentvalue = sliderValue
+            var sliderValue = player.currentTime / player.duration * timeSlider.maxValue
+            timeSlider.Currentvalue = sliderValue
             // log(slider.Currentvalue, slider.maxValue)
-            slider.sliderByValue()
+            timeSlider.sliderByValue()
         })
         $('#id-audio-music').on('ended', function(){
             nextSong()

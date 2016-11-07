@@ -42,15 +42,15 @@ title2 {
 control {
     display: block;
     width: 100%;
-    height: 25px;
     text-align: center;
     /*outline: 2px solid red;*/
-    line-height: 25px;
-    padding-top: 20px;
+    /*padding-top: 20px;*/
 }
 .player-slider {
     display: block;
     width: 100%;
+    height: 30px;
+    line-height: 30px;
     margin-top: 15px;
     /*outline: 2px solid red;*/
     font-size: 13px;
@@ -81,8 +81,8 @@ control {
 }
 #id-volume-mute {
     display: inline-block;
-    padding-right: 15px;
-    width: 30px;
+    /*padding-right: 15px;*/
+    width: 45px;
     vertical-align: middle;
     color: white;
     background-color: transparent;
@@ -95,7 +95,7 @@ control {
 .class-slider {
     display: inline-block;
     width: 65%;
-    vertical-align: middle;
+    /*vertical-align: middle;*/
     /*border: 2px solid red;*/
 }
 time {

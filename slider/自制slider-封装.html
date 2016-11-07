@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>自制slider</title>
+        <script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.js"></script>
+        <style media="screen">
+            body {
+                height: 800px;
+                border: 2px solid blue;.
+            }
+            .container {
+                width: 800px;;
+                height: 200px;
+                border: 2px solid red;
+                padding: 200px 50px;
+                margin-left: 100px;
+                background-color: darkgrey;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+
+        </div>
+        <!-- <input type="range" name="name" value=0> -->
+        <!-- <p></p> -->
+        <!-- <div class="slider"> -->
+            <!-- <div class="outer">
+                <div class="inner">
+                    <div class="dot"></div>
+                </div>
+            </div> -->
+        <!-- </div> -->
+        <!-- <input type="range" name="name" value=""> -->
+        <script type="text/javascript" src=自制slider-封装.js></script>
+        <script type="text/javascript">
+            var newSlider = new sliderDiv(1, '500px', 2, 15, 100, 0, '.container')
+            newSlider.createSlider()
+        </script>
+
+    </script>
+    </body>
+</html>

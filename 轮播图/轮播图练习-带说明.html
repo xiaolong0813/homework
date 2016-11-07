@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>轮播图</title>
+        <script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.js"></script>
+        <style media="screen">
+            .long-slide {
+                width: 500px;
+                height: 300px;
+            }
+            .long-slide-active {
+                cursor: pointer;
+            }
+            .long-slide-imgs {
+                width: 500px;
+                height: 300px;
+                border: 2px solid red;
+                text-align: center;
+                position: relative;
+            }
+            /*注意，这里long-slide-imags的属性为relative，long-slide-imag的属性为absolute，
+            这样图片才可以叠在一起，淡入淡出的时候，不会出现有不同位置图片闪现的情况*/
+            .long-slide-img {
+                width: 100%;
+                height: 100%;
+                display: none;
+                position: absolute;
+                left: 0;
+            }
+            .long-slide-img-active {
+                display: inline-block;
+            }
+            /*这里long-slide-button的padding设置为0，可以使其中的文字不会由于自动的padding而不居中。
+            （因为空间过窄，text-align有时候会内容溢出）*/
+            .long-slide-button {
+                position: absolute;
+                height: 80px;
+                width: 20px;
+                text-align:center;
+                padding: 0;
+                font-size: 20px;
+                opacity: 0.7;
+                display: none;
+            }
+            /*同样，设置position为absolute之后才可以用left等设置位置。*/
+            .long-slide-button-active {
+                display: block;
+            }
+            .long-slide-button-left {
+                left: 0;
+            }
+            .long-slide-button-right {
+                right: 0;
+            }
+            /*套路，使模块垂直居中的方法，这里因为已经设置了position，所以不用再设定。
+            应该把这个方法放在单独固定的样式里面，使用的时候给需要的模块加上这个样式*/
+            .vertical-center {
+                top: 50%;
+                transform: translateY(-50%);
+            }
+            /*在原来的位置上往上移动20。原来的位置和图片相邻，移动之后重叠*/
+            .long-slide-indicators {
+                position: relative;
+                bottom: 20px;
+                text-align: center;
+            }
+            /*设置圆形框的样式,用border-radius和padding可以设置，注意先在浏览器里面调试，合适之后把代码拷贝到这里*/
+            .long-slide-indicator {
+                display: inline-block;
+                background-color: darkblue;
+                color: white;
+                border-radius: 50%;
+                padding: 0 5px;
+                font-weight: bold;
+            }
+            .long-slide-indicator-active {
+                background-color: red;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="long-slide">
+            <!-- 把当前激活的图片号以及图片数等信息放入data，可以直接调用 -->
+            <div class="long-slide-imgs" data-active='0' data-imags='3'>
+                <img src="1.jpg" alt="1" class="long-slide-img"/>
+                <img src="2.jpg" alt="2" class="long-slide-img"/>
+                <img src="3.jpg" alt="3" class="long-slide-img"/>
+                <!-- 给每个按钮按照功能增加相应的class -->
+                <button type="button" name="button" class="long-slide-button long-slide-button-left vertical-center">&lt</button>
+                <button type="button" name="button" class="long-slide-button long-slide-button-right vertical-center">&gt</button>
+            </div>
+            <div class="long-slide-indicators">
+                <div class="long-slide-indicator">1</div>
+                <div class="long-slide-indicator">2</div>
+                <div class="long-slide-indicator">3</div>
+            </div>
+        </div>
+
+
+        <script>
+            var log = function() {
+                console.log.apply(console, arguments)
+            }
+            //初始化图片，使active在第一个图片，指示图也在第一个
+            var iniImags = function() {
+                $('.long-slide-imgs').data('active', 0)
+                // 注意，用$()[i]的方式选择出来的对象是dom对象，需要转换为jQuery，即$($()[i])
+                $($('.long-slide-img')[0]).addClass('long-slide-img-active')
+                $($('.long-slide-indicator')[0]).addClass('long-slide-indicator-active')
+            }
+            //切换图片函数，根据offset判断往上还是下或前进几个
+            var nextSlideimg = function(offset) {
+                // 获取现在的激活编号以及图片数量（都放在图片父元素的data里面）
+                var indexActive = $('.long-slide-imgs').data('active')
+                var numberOfImages = $('.long-slide-imgs').data('imags')
+                var i = (indexActive + numberOfImages + offset) % numberOfImages
+                // 定义新的index，即i，并赋予data，这是data的用法。
+                $('.long-slide-imgs').data('active', i)
+                //把现有激活的删掉，给下一个加上-图片的激活属性，以淡入的方式出现
+                $('.long-slide-img-active').fadeOut()
+                $('.long-slide-img-active').removeClass('long-slide-img-active')
+                $($('.long-slide-img')[i]).fadeIn()
+                $($('.long-slide-img')[i]).addClass('long-slide-img-active')
+                //把现有激活的删掉，给下一个加上-indicator的激活属性
+                $('.long-slide-indicator-active').removeClass('long-slide-indicator-active')
+                $($('.long-slide-indicator')[i]).addClass('long-slide-indicator-active')
+            }
+            // 选择上一个
+            var previousImag = function() {
+                nextSlideimg(-1)
+            }
+            // 选择下一个
+            var nextImag = function() {
+                nextSlideimg(1)
+            }
+            // 给各个按钮（包括指示标志）绑定事件
+            var bindEvents = function() {
+                // 1.激活上一个图片按钮
+                $(".long-slide-button-left").on('click', previousImag)
+                // 2.激活下一个图片按钮
+                $(".long-slide-button-right").on('click', nextImag)
+                // 在指示图indicator上面绑定，点击某个indicator，获取其text，即可以知道这是第几个图片的index，
+                // 先初始化使第一张图激活，再按照index和上面定义的选择函数激活那张图片
+                $(".long-slide-indicator").on('click', function(event){
+                    var self = $(event.target)
+                    var value = self.text()
+                    iniImags()
+                    nextSlideimg(value - 1)
+                })
+            }
+            // 绑定鼠标事件，即进入图片区显示按钮并变化指针形式，移出鼠标就隐藏
+            var bindMouse = function() {
+                $('.long-slide').on('mouseover', function(){
+                    $('.long-slide-button').addClass('long-slide-button-active')
+                    $('.long-slide').addClass('long-slide-active')
+                })
+                $('.long-slide').on('mouseout', function(){
+                    $('.long-slide-button').removeClass('long-slide-button-active')
+                })
+            }
+            //主函数
+            var __main = function() {
+                iniImags()
+                bindEvents()
+                bindMouse()
+            }
+
+            __main()
+
+        </script>
+
+    </body>
+</html>
