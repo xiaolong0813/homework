@@ -1,6 +1,4 @@
-    var log = function() {
-        console.log.apply(console, arguments)
-    }
+    var log = function() {console.log.apply(console, arguments)}
     //插入控件模板字符串
     var insertContainer = function(position, songList) {
         var numOfsongs = songList.length
@@ -12,9 +10,10 @@
             var form = songList[i].form
             var author = songList[i].author
             var back = songList[i].back
+            var path = songList[i].path
             var sign = `<i class="fa fa-volume-down" aria-hidden="true"></i>`
             var menuCell = `<menuList class=menu-cell>${sign} <menuTitle>${name}-${author}</menuTitle><menuDelete>x</menuDelete></menuList>`
-            var dataCell = `<song data-id=${id}><name>${name}</name><form>${form}</form><author>${author}</author><back>${back}</back></song>`
+            var dataCell = `<song data-id=${id}><name>${name}</name><form>${form}</form><author>${author}</author><back>${back}</back><path>${path}</path></song>`
             menuArray.push(menuCell)
             songArray.push(dataCell)
         }
@@ -325,7 +324,10 @@
         if (parseInt($('#id-audio-music')[0].dataset.num) === 0) {
             alert('播放列表为空')
         }else {
-            var src = `${$('song')[index].dataset.id}.${$($('song')[index]).find('form').text()}`
+            var id = $('song')[index].dataset.id
+            var form = $($('song')[index]).find('form').text()
+            var path = $($('song')[index]).find('path').text()
+            var src = `${path}${id}.${form}`
             return src
         }
     }
@@ -353,7 +355,7 @@
                 deg = (deg + 1) % 360
                 img.css('transform',`rotate(${deg}deg)`)
             }
-            window.rot = setInterval(rotate,20)
+            window.rot = setInterval(rotate,80)
         } else {
             clearInterval(rot)
         }
@@ -399,11 +401,11 @@
         playSwitch()
     }
     //要导入的歌曲array
-    var songList = [{id:4,name:'我只在乎你',form:'mp3',author:'邓丽君',back:'1.jpg'},
-                    {id:5,name:'分手快乐',form:'mp3',author:'梁静茹',back:'2.jpg'},
-                    {id:6,name:'beat it',form:'mp3',author:'mj',back:'3.jpg'},
-                    {id:7,name:'777777',form:'mp3',author:'7777',back:'3.jpg'},
-                    {id:8,name:'8888888',form:'mp3',author:'8888',back:'2.jpg'},]
+    var songList = [{id:4,name:'我只在乎你',form:'mp3',author:'邓丽君',back:'imags/1.jpg',path:'music/'},
+                    {id:5,name:'分手快乐',form:'mp3',author:'梁静茹',back:'imags/2.jpg',path:'music/'},
+                    {id:6,name:'beat it',form:'mp3',author:'mj',back:'imags/3.jpg',path:'music/'},
+                    {id:7,name:'777777',form:'mp3',author:'7777',back:'imags/3.jpg',path:'music/'},
+                    {id:8,name:'8888888',form:'mp3',author:'8888',back:'imags/2.jpg',path:'music/'},]
     //主函数
     var __main = function() {
         insertContainer('body', songList)

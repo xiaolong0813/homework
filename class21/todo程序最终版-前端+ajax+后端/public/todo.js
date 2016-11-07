@@ -9,7 +9,8 @@ var TodoApi = function(){
     this.all = '/todo/all',
     this.add = '/todo/add',
     this.update = '/todo/update/',
-    this.del = '/todo/delete/'
+    this.del = '/todo/delete/',
+    this.css = '/todo/css'
 }
 //AJAX程序
 TodoApi.prototype.ajax = function(request) {
@@ -65,6 +66,10 @@ TodoApi.prototype.delTodo = function(id) {
 //根据id在服务器更新一个任务
 TodoApi.prototype.editTodo = function(id, newtask) {
         this.ajax(this.request('POST', this.update, callUp, newtask, id))
+}
+//获取css文件
+TodoApi.prototype.getCss = function() {
+        this.ajax(this.request('GET', this.css, callCss))
 }
 
 //定义一个对象
@@ -123,6 +128,11 @@ var callUp = function(response) {
     }else {
         alert('更新失败')
     }
+}
+//在todo/css里面获取css文件后，进行处理并添加入head里面
+var callCss = function(response) {
+    var css = `<style>${response}</style>`
+    $('head').append(css)
 }
 //////////////////////////////////各种控件绑定事件///////////////////////////////////////////////
 var currentTime = function() {
@@ -295,6 +305,7 @@ var initTodos = function() {
   //     insertTodo(todoList[i])
   // }
   api.getAll()
+  api.getCss()
 }
 
 var bindEvents = function() {

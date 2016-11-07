@@ -1,0 +1,177 @@
+body {
+    /*text-align: center;*/
+    background-color: black;
+    color: white;
+    margin:0px;                     /* 外边距   */
+    padding:0px;                    /* 内边距   */
+    font-family: Microsoft YaHei;   /* 字体     */
+}
+logo {
+    width: 100%;
+    display: block;
+    padding: 0;
+    text-align: center;
+    margin: 0px auto;
+    /*outline: 2px solid red;*/
+    height: 420px;
+}
+logo img {
+    display: block;
+    height: 250px;
+    width: 250px;
+    /*outline: 2px solid red;*/
+    margin: 80px auto;
+    border-radius: 50%;
+    transform:rotate(0deg);
+}
+/*.center{
+    position: absolute;
+    top : 50%;
+    transform : translateY(-50%);
+    }*/
+title1 {
+    display: block;
+    font-size: 20px;
+    margin: 20px auto 3px auto;
+}
+title2 {
+    display: block;
+    margin: 0px auto 5px auto;
+    font-size: 10px;
+}
+control {
+    display: block;
+    width: 100%;
+    height: 25px;
+    text-align: center;
+    /*outline: 2px solid red;*/
+    line-height: 25px;
+    padding-top: 20px;
+}
+.player-slider {
+    display: block;
+    width: 100%;
+    margin-top: 15px;
+    /*outline: 2px solid red;*/
+    font-size: 13px;
+}
+.player-play-mode {
+    width: 95%;
+    height: 50px;
+    display: block;
+    margin: 10px auto;
+    padding: 0;
+    /*outline: 2px solid blue;*/
+    /*分散对齐*/
+    /*text-align:justify;
+    text-align-last:justify;*/
+}
+.player-play-mode button {
+    display: table-cell;
+    vertical-align: middle;
+    width: 18%;
+    /*padding: 0;*/
+    color: white;
+    background-color: transparent;
+    border: none;
+    font-size: 25px;
+    text-align: center;
+    outline:none;
+    /*outline: 2px solid red;*/
+}
+#id-volume-mute {
+    display: inline-block;
+    padding-right: 15px;
+    width: 30px;
+    vertical-align: middle;
+    color: white;
+    background-color: transparent;
+    border: none;
+    font-size: 25px;
+    text-align: center;
+    outline:none;
+    /*outline: 2px solid red;*/
+}
+.class-slider {
+    display: table-cell;
+    width: 65%;
+    vertical-align: middle;
+}
+time {
+    display: inline-block;
+    text-align: center;
+    /*padding-right: 15px;*/
+    width: 45px;
+    vertical-align: middle;
+    /*outline: 2px solid red;*/
+}
+.player-play-mode .multi-button {
+    font-size: 50px;
+    /*margin-top: -15px;*/
+}
+button:active,button:hover ,.large-button:active {
+    outline: none;
+}
+.center {
+    left: 50%;
+    transform: translateX(-50%);
+}
+menu {
+    display: block;
+    width: 100%;
+    position: fixed;
+    margin: 0;
+    padding: 0;
+    bottom: -300px;
+    background-color: white;
+    height: 300px;
+    color: black;
+    font-size: 20px;
+    overflow: none;
+    opacity: 0.95;
+    z-index: 100;
+    /*outline: 2px solid red;*/
+}
+.menu-cell {
+    display: block;
+    width: 100%;
+    text-align: center;
+    color: black;
+    border-bottom: 0.5px solid lightgrey;
+}
+menuHead,menuClose {
+    height: 45px;
+    line-height: 45px;
+    border-top: 0.5px solid lightgrey;
+}
+menuListContainer {
+    display: block;
+    width: 100%;
+    height: 70%;
+    overflow: scroll;
+    /*outline: 2px solid blue;*/
+}
+
+menuList{
+    height: 50px;
+    line-height: 50px;
+    display: inline-block;
+    margin: 0;
+    width: 100%;
+    /*outline: 2px solid red;*/
+}
+menuTitle {
+    display: inline-block;
+    width: 80%;
+    text-align: left;
+    /*outline: 2px solid red;*/
+}
+menuDelete {
+    display: inline-block;
+    width: 10%;
+    text-align: right;
+    /*outline: 2px solid red;*/
+}
+data {
+    display: none;
+}

@@ -29,7 +29,7 @@ var saveFile = function(path, data) {
 /////////////////////////////引入express库并创建实例app，定义主页//////////////////
 var express = require('express')
 var app = express()
-//配置静态文件
+//配置静态文件,注意使用express库才有静态文件，使用fs库打开文件夹没有这种方法，需定义正确路径
 // app.use(express.static('public'))
 //定义用于定义post命令的函数
 var bodyParser = require('body-parser')
@@ -48,19 +48,20 @@ var readFiles = function(path, response) {
         }
     })
 }
+//注意这里的路径path，读取子文件夹里的文件，路径格式为：子文件夹名/文件.html，不用
+//在前面再加/
 app.get('/todo', function(req, res){
-    readFiles('todo.html', res)
+    readFiles('public/todo.html', res)
 })
 app.get('/todo/css', function(req, res){
-    readFiles('todo.css', res)
+    readFiles('public/todo.css', res)
 })
 app.get('/todo/js', function(req, res){
-    readFiles('todo.js', res)
+    readFiles('public/todo.js', res)
 })
 app.get('/todo/pop', function(req, res){
-    readFiles('弹窗.js', res)
+    readFiles('public/弹窗.js', res)
 })
-
 
 ////////////定义用于add，delete和update的函数
 var addTodo = function(todo) {
@@ -73,7 +74,7 @@ var addTodo = function(todo) {
         todo.id = 1
     }
     todoList.push(todo)
-    saveFile('data.txt', JSON.stringify(todoList))
+    saveFile('public/data.txt', JSON.stringify(todoList))
     return todo
 }
 //根据id找到在todoList中的位置
@@ -99,7 +100,7 @@ var deleteTodo = function(id) {
     if (hasIndex) {
         var delTodo = todoList[index]
         todoList.splice(index, 1)
-        saveFile('data.txt', JSON.stringify(todoList))
+        saveFile('public/data.txt', JSON.stringify(todoList))
         return delTodo
     }else {
         return null
@@ -111,7 +112,7 @@ var updateTodo = function(id, task) {
     var hasIndex = (index !== null)
     if (hasIndex) {
         todoList[index].task = task
-        saveFile('data.txt', JSON.stringify(todoList))
+        saveFile('public/data.txt', JSON.stringify(todoList))
         return todoList[index]
     } else {
         return null
@@ -157,5 +158,5 @@ var server = app.listen(8081, function(){
     var host = server.address().address
     var port = server.address().port
     log('todo访问地址为： http://%s:%s', host, port)
-    loadFile('data.txt')
+    loadFile('public/data.txt')
 })
