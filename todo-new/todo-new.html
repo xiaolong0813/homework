@@ -29,6 +29,7 @@
             }
             nav, aside {
                 flex: 0 0 15em;
+                overflow: hidden;
             }
             nav {
                 display: flex;
@@ -40,7 +41,15 @@
             nav .nav-cell,.todo-item-title {
                 flex: 0 0 2em;
                 line-height: 2em;
+                /*display: flex;
+                justify-content: space-between;*/
                 padding-left: 0.5em;
+            }
+            nav .todo-item-title i,.todo-item-child i {
+                display: inline-block;
+                /*margin-right: 60%;*/
+                font-size: 1.2em;
+                /*display: none;*/
             }
             nav .nav-cell:nth-child(1):hover {
                 background-color: white;
@@ -71,6 +80,7 @@
                 text-align: center;
             }
             aside {
+                overflow:hidden;
                 display: flex;
                 flex-direction: column;
                 background-color: rgba(195, 212, 222, 0.5);
@@ -107,7 +117,7 @@
                 padding-left: 0.5em;
                 /*background-color: rgba(93, 125, 143, 0.44);*/
             }
-            aside .todo-task-list-cell:nth-child(odd) {
+            aside .todo-task-list .todo-task-list-time {
                 background-color: rgba(107, 120, 128, 0.5);
             }
             aside .todo-task-list-content:hover {
@@ -124,8 +134,8 @@
                 cursor: pointer;
                 background: #eee;
             }
-            nav .child-active {
-                background: #eee;
+            nav .child-active, aside .task-active {
+                background: white;
             }
             main {
                 display: flex;
@@ -137,6 +147,25 @@
                 padding-left: 1.5em;
                 font-weight: bolder;
                 background-color: rgba(107, 120, 128, 0.5);
+            }
+            main .todo-title span {
+                display: inline-block;
+                width: 40%;
+                font-size: 1.3em;
+                text-align: left;
+                vertical-align: middle;
+                overflow: hidden;
+                /*outline: 2px solid red;*/
+            }
+            main .todo-title .editAndDone {
+                /*display: inline-block;*/
+                width: 50%;
+                font-size: 1.8em;
+                text-align: right;
+                vertical-align: middle;
+            }
+            main .todo-title .editAndDone a:hover {
+                cursor: pointer;
             }
             main .todo-time {
                 flex: 0 0 4em;
@@ -162,10 +191,21 @@
                 outline: none;
             }
             main .todo-saveAndQuit {
-                margin-left: 70%;
+                display: inline-block;
+                width: 500px;
+                margin-left: 50%;
                 margin-bottom: 50px;
+                /*outline: 2px solid red;*/
+            }
+            main .todo-saveAndQuit span {
+                display: inline-block;
+                width: 20%;
+                margin-right: 50px;
+                font-size: 1em;
+                color: red;
             }
             main .todo-saveAndQuit button {
+                display: inline-block;
                 width: 60px;
                 height: 30px;
                 color: white;
@@ -252,21 +292,22 @@
             }
 
         </style>
+        <link rel="stylesheet" href="http://apps.bdimg.com/libs/fontawesome/4.2.0/css/font-awesome.min.css">
     </head>
     <body>
         <header>ToDo</header>
         <div class="todo-body">
             <nav>
-                <div class="nav-cell">所有任务(<span>1</span>)</div>
+                <div class="nav-cell">所有任务  (<span>1</span>)</div>
                 <div class="nav-cell">分类列表</div>
                 <div class="todo-item-container" data-activechild=0>
                     <!-- 这是一个大项目分类 -->
                     <div class="todo-item" data-idofitem=0>
-                        <div class="todo-item-title">
-                            默认分类(<span>1</span>)
+                        <div class="todo-item-title todo-item-delete">
+                            默认分类  (<span>1</span>)
                         </div>
-                        <div class="todo-item-child" data-idofchild=0>
-                            默认子分类(<span>1</span>)
+                        <div class="todo-item-child todo-item-delete" data-idofchild=0>
+                            默认子分类  (<span>1</span>)
                         </div>
                     </div>
                 </div>
@@ -288,15 +329,22 @@
                     新增任务
                 </div>
             </aside>
-            <main>
-                <div class="todo-title">使用说明</div>
+            <main data-state=0>
+                <div class="todo-title">
+                    <span class="todo-title-note">使用说明</span>
+                    <div class="editAndDone" style="display:inline-block">
+                        <a id="todo-done"><i class="fa fa-check-square-o"></i></a>
+                        <a id="todo-edit"><i class="fa fa-pencil-square-o"></i></a>
+                    </div>
+                </div>
                 <div class="todo-time">任务日期：
-                    <span>2016-11-09</span>
+                    <span class="todo-time-note">2016-11-09</span>
                 </div>
                 <div class="todo-content">
                     <textarea class="textarea-content" placeholder="请输入任务内容" readonly="readonly" disabled="disabled">本应用是离线应用，数据将存储在本地硬盘</textarea>
                 </div>
                 <div class="todo-saveAndQuit" style="display:none">
+                    <span class="info"></span>
                     <button class="save">保存</button>
                     <button class="quit">放弃</button>
                 </div>
