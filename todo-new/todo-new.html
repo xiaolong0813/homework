@@ -51,10 +51,6 @@
                 font-size: 1.2em;
                 /*display: none;*/
             }
-            nav .nav-cell:nth-child(1):hover {
-                background-color: white;
-                cursor: pointer;
-            }
             nav .todo-item-container {
                 flex: 1;
                 display: flex;
@@ -298,15 +294,15 @@
         <header>ToDo</header>
         <div class="todo-body">
             <nav>
-                <div class="nav-cell">所有任务  (<span>1</span>)</div>
+                <div class="nav-cell todo-item-child" id="todo-item-all" data-idofchild=-1>所有任务  (<span>1</span>)</div>
                 <div class="nav-cell">分类列表</div>
                 <div class="todo-item-container" data-activechild=0>
                     <!-- 这是一个大项目分类 -->
                     <div class="todo-item" data-idofitem=0>
-                        <div class="todo-item-title todo-item-delete">
+                        <div class="todo-item-title todo-item-delete" data-idofchild=i0>
                             默认分类  (<span>1</span>)
                         </div>
-                        <div class="todo-item-child todo-item-delete" data-idofchild=0>
+                        <div class="todo-item-child todo-item-delete" id="default-child" data-idofchild=0>
                             默认子分类  (<span>1</span>)
                         </div>
                     </div>
@@ -333,8 +329,9 @@
                 <div class="todo-title">
                     <span class="todo-title-note">使用说明</span>
                     <div class="editAndDone" style="display:inline-block">
-                        <a id="todo-done"><i class="fa fa-check-square-o"></i></a>
-                        <a id="todo-edit"><i class="fa fa-pencil-square-o"></i></a>
+                        <a id="id-todo-done"><i class="fa fa-check"></i></a>
+                        <a id="id-todo-edit"><i class="fa fa-pencil"></i></a>
+                        <a id="id-todo-delete"><i class="fa fa-times"></i></a>
                     </div>
                 </div>
                 <div class="todo-time">任务日期：
