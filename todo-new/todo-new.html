@@ -6,64 +6,83 @@
         <style media="screen">
             body {
                 padding: 0;
-                margin:0px;
+                margin: 0;
                 display: flex;
                 flex-direction: column;
-                min-height: 100vh;
+                /*设置高度为视口高度（即100vh），即可充满整个屏幕*/
+                height: 100vh;
                 font-family: Microsoft YaHei;
+                overflow-x:hidden;
             }
             header {
-                flex: 0 0 4em;
-                line-height: 50px;
-                box-shadow: 1px 2px 25px #333333;
-                background-color: rgba(0, 81, 255, 0.5);
+                flex: 0 0 2.5em;
+                width: 100%;
+                line-height: 2.5em;
+                /*box-shadow: 1px 2px 25px #333333;*/
+                background-color: #66CCFF;
                 padding-left: 20px;
                 z-index: 100;
+                font-family: cursive;
+                color: white;
+                font-size: 1.5em;
             }
             .todo-body {
                 display: flex;
                 flex: 1;
+                width: 100%;
             }
             main {
                 flex: 1;
             }
             nav, aside {
                 flex: 0 0 15em;
-                overflow: hidden;
+                /*overflow: hidden;*/
             }
             nav {
                 display: flex;
                 flex-direction: column;
+                /*background-color: rgba(107, 120, 128, 0.5);*/
                 background-color: rgba(107, 120, 128, 0.5);
                 border-right: 0.6px solid grey;
-                box-shadow: 0.5px 5px 7px #777777;
+                /*box-shadow: 0.5px 5px 7px #777777;*/
             }
-            nav .nav-cell,.todo-item-title {
+            nav .nav-cell,.todo-item-title,.todo-item-child,#todo-item-all {
                 flex: 0 0 2em;
                 line-height: 2em;
-                /*display: flex;
-                justify-content: space-between;*/
-                padding-left: 0.5em;
+                padding-left: 1em;
+            }
+            nav .todo-item-title {
+                background-color:
+            }
+            nav .todo-item-child {
+
+            }
+            nav .title-span, .child-span {
+                display: inline-block;
+                width: 80%;
+                height: 100%;
+                overflow: hidden;
+                vertical-align: middle;
+                /*outline: 1px solid red;*/
+                /*指定下面这条，可以让盒模型长宽固定，定义padding和margin不会改变大小*/
+                box-sizing:border-box;
+            }
+            nav .child-span {
+                padding-left: 2em;
             }
             nav .todo-item-title i,.todo-item-child i {
                 display: inline-block;
-                /*margin-right: 60%;*/
                 font-size: 1.2em;
-                /*display: none;*/
             }
             nav .todo-item-container {
                 flex: 1;
                 display: flex;
                 flex-direction: column;
+                overflow-y: auto;
             }
             nav .todo-item {
                 display: flex;
                 flex-direction: column;
-            }
-            nav .todo-item-child {
-                flex: 0 0 2em;
-                padding-left: 2em;
-                line-height: 2em;
             }
             nav .todo-item-child:hover,.todo-item-title:hover {
                 background-color: white;
@@ -76,12 +95,12 @@
                 text-align: center;
             }
             aside {
-                overflow:hidden;
+                /*overflow:hidden;*/
                 display: flex;
                 flex-direction: column;
                 background-color: rgba(195, 212, 222, 0.5);
                 border-right: 0.6px solid grey;
-                box-shadow: 0.5px 5px 7px #777777;
+                /*box-shadow: 0.5px 5px 7px #777777;*/
             }
             aside .todo-buttons {
                 flex: 0 0 4em;
@@ -106,6 +125,7 @@
                 flex: 1;
                 display: flex;
                 flex-direction: column;
+                overflow-y:auto;
             }
             aside .todo-task-list div {
                 flex: 0 0 2em;
@@ -215,6 +235,12 @@
             main .todo-saveAndQuit button:focus {
                 outline: none;
             }
+            main .todo-name-input,.todo-date-input {
+                width: 200px;
+                height: 2em;
+                font-family: Microsoft YaHei;
+                font-size: 0.7em;
+            }
             .cover {
                 position: fixed;
                 width: 100%;
@@ -286,28 +312,42 @@
                 cursor: pointer;
                 background-color: white;
             }
+            @media all and (max-width: 750px){
+                header {
+                    text-align: center;
+                }
+                nav {
+                    display: none;
+                }
+                aside {
+                    display: none;
+                }
+            }
 
         </style>
         <link rel="stylesheet" href="http://apps.bdimg.com/libs/fontawesome/4.2.0/css/font-awesome.min.css">
     </head>
     <body>
-        <header>ToDo</header>
+        <header><i class="fa fa-th"></i>  ToDo</header>
         <div class="todo-body">
             <nav>
-                <div class="nav-cell todo-item-child" id="todo-item-all" data-idofchild=-1>所有任务  (<span>1</span>)</div>
-                <div class="nav-cell">分类列表</div>
+                <div class="nav-cell todo-item-child" id="todo-item-all" data-idofchild=-1><i class="fa fa-globe"></i>
+                     所有任务  (<span>1</span>)
+                </div>
+                <div class="nav-cell"><i class="fa fa-list-ul"></i>  分类列表</div>
                 <div class="todo-item-container" data-activechild=0>
                     <!-- 这是一个大项目分类 -->
                     <div class="todo-item" data-idofitem=0>
-                        <div class="todo-item-title todo-item-delete" data-idofchild=i0>
+                        <div class="todo-item-title" data-idofchild=i0>
                             默认分类  (<span>1</span>)
                         </div>
-                        <div class="todo-item-child todo-item-delete" id="default-child" data-idofchild=0>
+                        <div class="todo-item-child" id="default-child" data-idofchild=0>
                             默认子分类  (<span>1</span>)
                         </div>
                     </div>
                 </div>
                 <div class="nav-btm">
+                    <i class="fa fa-plus"></i>
                     新增分类
                 </div>
             </nav>
@@ -322,6 +362,7 @@
                     <div class="todo-task-list-content todo-task-list-cell" data-idoftask=0>使用说明</div>
                 </div>
                 <div class="aside-btm">
+                    <i class="fa fa-plus"></i>
                     新增任务
                 </div>
             </aside>
