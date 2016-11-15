@@ -129,14 +129,17 @@ var addParentChildData = function(selValue, inputValue) {
     var selNUm = Number(selValue)
     // log(selNUm)
     if (selNUm === 0) {
-        var newId = todo.parentList.length
+        // 如果是新元素，那么新添加的元素的 id 就是最后一个元素的 id + 1，注意不能按照长度。
+        var pLen = todo.parentList.length
+        var newId = Number(todo.parentList[pLen - 1].id) + 1
         var newParent = {id: newId,name: inputValue,child:[]}
         //把新加入的父类导入parentList，注意，这里为了要模拟后端交互，用parentList里面的
         //数据进行前端页面的修改，假设后端返回的是newParent
         todo.parentList.push(newParent)
         addParentFront(newParent)
     } else {
-        var newId = todo.childList.length
+        var cLen = todo.childList.length
+        var newId = Number(todo.childList[cLen - 1].id) + 1
         var newChild = {id: newId, pid: selNUm, name: inputValue, child: []}
         todo.childList.push(newChild)
         //同样，这里不能把pid当做index直接修改，应该根据id找到parentList里面相应对象，再修改这个对象
@@ -151,7 +154,7 @@ var addParentFront = function(newParent) {
     //添加父类页面的HTML部分
     var t = `<div class="todo-item" data-idofitem=${newParent.id}>
         <div class="todo-item-title todo-item-delete" data-idofchild=i${newParent.id}>
-            ${newParent.name}  (<span>0</span>)
+            ${newParent.name}  (<span data-idofitemspan=${newParent.id}>0</span>)
             <i class="fa fa-trash-o"></i>
         </div>
     </div>`
@@ -164,7 +167,7 @@ var addParentFront = function(newParent) {
 var addChildFront = function(newChild) {
     //子分类的模板字符串
     var t = `<div class="todo-item-child todo-item-delete" data-idofchild=${newChild.id}>
-                ${newChild.name}  (<span>0</span>)
+                ${newChild.name}  (<span data-idofchildspan=${newChild.id}>0</span>)
                 <i class="fa fa-trash-o"></i>
             </div>`
     var id = newChild.pid
@@ -223,16 +226,6 @@ var activeOneChild = function(e) {
     var cid = e.dataset.idofchild
     //这个作为激活的id赋予container的data
     $('.todo-item-container').setAttribute('data-activechild',cid)
-    // //如果选择的是子元素
-    // if (e.classList.contains('todo-item-child')) {
-    //     var cid = e.dataset.idofchild
-    //     //这个作为激活的id赋予container的data
-    //     $('.todo-item-container').setAttribute('data-activechild',cid)
-    //     //如果是父元素
-    // } else if (e.classList.contains('todo-item-title')) {
-    //     var pid = e.parentElement.dataset.idofitem
-    //     $('.todo-item-container').setAttribute('data-activeparent',pid)
-    // }
 }
 //绑定删除parent或者child的事件
 var deleteBind = function() {
@@ -369,6 +362,29 @@ var deleteTaskFront = function(tid) {
     rendAside('all')
     rendMain()
 
+}
+//更新渲染nav界面
+var rendNav = function() {
+    //因为第一个元素为默认分类，这里从第二个开始导入
+    for (let i = 1; i < todo.parentList.length; i++) {
+        addParentFront(todo.parentList[i])
+        //导入之后更新这个父类下的任务个数
+        let sum = 0
+        let childArray = todo.parentList[i].child
+        for (let i = 0; i < childArray.length; i++) {
+            var taskNum = findById(childArray[i], todo.childList).child.length
+            sum += taskNum
+        }
+        let pid = todo.parentList[i].id
+        $(`[data-idofitemspan="${pid}"]`).innerHTML = sum
+    }
+    //第一个元素为默认子分类，这里从第二个开始导入
+    for (let i = 1; i < todo.childList.length; i++) {
+        addChildFront(todo.childList[i])
+        let sum = todo.childList[i].child.length
+        let cid = todo.childList[i].id
+        $(`[data-idofchildspan="${cid}"]`).innerHTML = sum
+    }
 }
 //根据date前后重新排列taskArray
 var arrayByDate = function(array) {
@@ -524,9 +540,13 @@ var rendMain = function() {
     var tid = getActiveTask()
     var finished = findById(tid, todo.taskList).finish
     if (finished) {
-        $('.editAndDone').style.display = 'none'
+        $('.editAndDone').style.display = 'inline-block'
+        $('#id-todo-done').style.display = 'none'
+        $('#id-todo-edit').style.display = 'none'
     } else {
         $('.editAndDone').style.display = 'inline-block'
+        $('#id-todo-done').style.display = 'inline-block'
+        $('#id-todo-edit').style.display = 'inline-block'
     }
     //根据id进行渲染
     if(Number(tid) !== -1) {
@@ -613,7 +633,8 @@ var saveTaskBind = function() {
 //将新任务添加进taskList。如果相同，说明是旧任务，更新这个任务
 var addTaskData = function(name, date, content) {
     var cid = getActiveChild()
-    var newTid = todo.taskList.length
+    var tLen = todo.taskList.length
+    var newTid = Number(todo.taskList[tLen - 1].id) + 1
     var newTask = {id: newTid, pid: cid, name: name, content: content,date:date, finish: false,}
     todo.taskList.push(newTask)
     var cCell = findById(cid, todo.childList)
@@ -709,14 +730,7 @@ var editTaskFront = function(editTask) {
 var initTodo = function() {
     // saveTodo()
     todo = loadTodo()
-    for (let i = 1; i < todo.parentList.length; i++) {
-        log('pa',todo.parentList[i])
-        addParentFront(todo.parentList[i])
-    }
-    for (let i = 1; i < todo.childList.length; i++) {
-        log('ch',todo.childList[i])
-        addChildFront(todo.childList[i])
-    }
+    rendNav()
     selectAll()
 }
 //保存数据
