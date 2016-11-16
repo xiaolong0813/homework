@@ -46,10 +46,10 @@
         padding-left: 1em;
     }
     nav .todo-item-title {
-        background-color:
+        /*background-color:rgba(107, 120, 128, 0.5);*/
     }
     nav .todo-item-child {
-
+        /*background-color: rgba(195, 212, 222, 0.5);*/
     }
     nav .title-span, .child-span {
         display: inline-block;
