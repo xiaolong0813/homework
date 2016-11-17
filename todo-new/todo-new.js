@@ -781,8 +781,11 @@ var saveTodo = function() {
 //读取数据
 var loadTodo = function() {
     var a = localStorage.todo
-    // log(a)
-    return JSON.parse(a)
+    if (a) {
+        return JSON.parse(a)
+    } else {
+        return todo
+    }
 }
 //绑定各个事件
 var bindEvents = function() {
